@@ -9,6 +9,7 @@
         <module>RNE-service</module>
         <module>RNE-persistence</module>
         <module>RNE-web</module>
+        <module>Ejemplo</module>
     </modules>
   
     <properties>        
@@ -20,22 +21,7 @@
         <version.junit>4.11</version.junit>
         <jmock.version>2.6.0</jmock.version>
         <version.javaee_api>7.0</version.javaee_api>
-        
-        
-        <primefaces.version>5.1</primefaces.version>
-        <primefaces.extensions.version>3.0.0</primefaces.extensions.version>
-        
-        <selenium.version>2.43.1</selenium.version>
-        
-        <!-- Wildfly 8.1.0.Final--> <!--  
-        <hibernate.version>4.3.5.Final</hibernate.version>
-        <hibernate.validator.version>5.1.0.Final</hibernate.validator.version>
-        <slf4j.version>1.7.7</slf4j.version>
-        <h2.version>1.3.173</h2.version>
-        <javax.faces.version>2.2.6</javax.faces.version>
-        <javax.el.version>2.2.4</javax.el.version>-->
-        
-        
+        <mysql.version>5.1.35</mysql.version>
         <hibernate.version>4.3.7.Final</hibernate.version>
         <hibernate.validator.version>5.1.3.Final</hibernate.validator.version>
         <slf4j.version>1.7.7</slf4j.version>
@@ -43,6 +29,9 @@
         <javax.faces.version>2.2.8</javax.faces.version>
         <javax.el.version>2.2.4</javax.el.version>
         
+        <!-- Spring -->
+        <spring.version>4.1.6.RELEASE</spring.version>   
+             
         <!-- EJB spec version -->
         <ejb-spec-version>3.2</ejb-spec-version>        
                 
@@ -67,17 +56,26 @@
                 <version>${version.javaee_api}</version>
                 <scope>provided</scope>
             </dependency>
+            <!-- Spring dependencies -->
             <dependency>
-                <groupId>org.primefaces</groupId>
-                <artifactId>primefaces</artifactId>
-                <version>${primefaces.version}</version>
-                <scope>provided</scope>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.primefaces.extensions</groupId>
-                <artifactId>primefaces-extensions</artifactId>
-                <version>${primefaces.extensions.version}</version>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>
+            <!-- Spring dependencies -->
+            
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
@@ -87,19 +85,15 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.3.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.3.1</version>
-            </dependency>
+            </dependency>           
             
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency> 
-                      
+                
+            <!-- Dependencias de Hibernate -->      
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
@@ -118,6 +112,13 @@
                 <version>${hibernate.validator.version}</version>
                 <scope>test</scope>
             </dependency>
+            
+            <!--  Driver para bases de datos -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
@@ -130,6 +131,8 @@
                 <version>9.3-1102-jdbc41</version>
                 <scope>provided</scope>
             </dependency>
+            
+            <!--  Dependencias para pruebas unitarias e integracion -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -154,42 +157,14 @@
                 <version>1.10.17</version> 
                 <scope>test</scope>
             </dependency>
+            
             <dependency>  
                 <groupId>org.slf4j</groupId>  
                 <artifactId>slf4j-log4j12</artifactId>  
                 <version>${slf4j.version}</version>
                 <scope>test</scope>  
             </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>javax.faces</artifactId>
-                <version>${javax.faces.version}</version>                
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.el</groupId>
-                <artifactId>javax.el-api</artifactId>
-                <version>${javax.el.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>${javax.el.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.umlgraph</groupId>                                      
-                <artifactId>umlgraph</artifactId>                                    
-                <version>5.6.6</version>  
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.puppycrawl.tools</groupId>
-                <artifactId>checkstyle</artifactId>
-                <version>6.1.1</version>
-                <scope>compile</scope>
-            </dependency>
+            
         </dependencies>
     </dependencyManagement>
       
@@ -201,40 +176,6 @@
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Maven Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <url>http://repository.primefaces.org/</url>
-            <id>PrimeFaces-maven-lib</id>
-            <layout>default</layout>
-            <name>Repository for library PrimeFaces-maven-lib</name>
-        </repository>
-        <repository>
-            <id>jboss-releases-repository-group</id>
-            <name>JBoss Releases Maven Repository Group</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
         </repository>
         <repository>
             <id>SpringSource Repository</id>
@@ -360,11 +301,6 @@
                             </plugin>
                         </reportPlugins>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>2.4</version>
                 </plugin>
             </plugins>       
         </pluginManagement>
